@@ -1,0 +1,8 @@
+[package]
+name = "todem"
+version = "0.1.0"
+authors = ["Tomasz Morawski <romen3@gmail.com>"]
+
+[dependencies]
+regex = "1.1.0"
+reqwest = "0.9.5"
