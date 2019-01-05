@@ -29,21 +29,48 @@ fn get_direct_dependencies(lines: Lines<StdinLock>) -> Vec<Library> {
     return libs;
 }
 
+fn print_head_section() {
+    println!("<head>");
+    println!("<link href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css\" rel=\"stylesheet\" integrity=\"sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS\" crossorigin=\"anonymous\">");
+    println!("</head>");
+}
+
 fn main() {
     let mut buffer = String::new();
     let stdin = io::stdin();
 
     let mut handle = stdin.lock();
     let lines_to_process = get_direct_dependencies(handle.lines());
-    println!("{}", lines_to_process.iter().map(Library::to_string).collect::<Vec<String>>().join("\n"));
 
     let licenced_libraries = lines_to_process.iter().map(|line| {
         let licences = find_licences(line);
         return LicencedLibrary::new(line.clone(), licences);
     }).collect::<Vec<_>>();
 
+
+    println!("<html>");
+    print_head_section();
+
+    println!("<body>");
+    println!("<div>");
+    println!("<table class=\"table table-striped\">");
+    println!("<thead><tr>");
+    println!("<th scope=\"col\">Grupa</th><th scope=\"col\">Artefakt</th><th scope=\"col\">Wersja</th><th scope=\"col\">Licencja</th>");
+    println!("</thead>");
+
+    println!("<tbody>");
     for lic in licenced_libraries {
-        println!("{}", lic.to_string())
+        println!("<tr>");
+        println!("<td>{}</td>", lic.library.group_id);
+        println!("<td>{}</td>", lic.library.artifact_id);
+        println!("<td>{}</td>", lic.library.version);
+        println!("<td>{}</td>", lic.licences.iter().map(|x| x.name.clone()).collect::<Vec<_>>().join(", "));
+        println!("</tr>");
     }
+    println!("</tbody>");
+    println!("</table>");
+    println!("</div>");
+    println!("</body>");
+    println!("</html>");
 }
 

@@ -6,8 +6,8 @@ use regex::Regex;
 use reqwest::Result;
 
 pub struct Licence {
-    name: String,
-    licence_url: String
+    pub name: String,
+    pub licence_url: String
 }
 
 impl ToString for Licence {
